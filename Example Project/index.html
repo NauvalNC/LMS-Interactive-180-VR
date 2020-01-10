@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <!-- /////////////////////////// HTML Head ///////////////////////////-->
+    <head>
+        <title>LMS VR</title>
+        <link rel="stylesheet" type="text/css" href="css/index.css"/>
+        <script src="js/jquery-3.4.1.min.js"></script>
+        <script src="js/aframe.min.js"></script>
+        <script src="js/aframe-event-set-component.min.js"></script>
+        
+        <script src="js/lms-vr-functions-pack.js"></script>
+        <script src="scorm/scorm12.js"></script>
+    </head>
+
+
+    <!-- /////////////////////////// HTML Body ///////////////////////////-->
+    <body>
+        <div id="lobby" style="display: none;">
+            <p>This experience requires your<br/>fullscreen mode permission.</p>
+            <button id="allow-btn" onclick="fullScreen()">Allow Fullscreen</button>
+        </div>
+
+        
+        <!-- /////////////////////////// A-Frame Scene ///////////////////////////-->
+        <a-scene id="scene" background="color: gray">
+            <!-- A Frame Assets -->
+            <a-assets>
+                <!-- Video Sky Sources -->
+                <video id="beach_180" src="videos/beach_180.mp4"></video>
+                <video id="london_180" src="videos/london_180.mp4"></video>
+                
+                <!-- Camera Cursor Mixin -->
+                <a-mixin id="camera-cursor"
+                    animation__click="property: scale; startEvents: click; easing: linear; dur: 100; from: 0.01 0.01 0.01; to: 0.03 0.03 0.03"
+                    animation__fusing="property: scale; startEvents: fusing; easing: linear; dur: 1000; from: 0.03 0.03 0.03; to: 0.01 0.01 0.01"
+                    animation__mouseleave="property: scale; startEvents: mouseleave; easing: linear; dur: 100; to: 0.03 0.03 0.03"
+                    cursor="fuse: true; fuse-timeout: 1000"
+                    raycaster="objects: .interactable; interval: 200"
+                    geometry="primitive: ring"
+                    material="color: white; shader: flat"
+                    scale="0.03 0.03 0.03"
+                    position="0 0 -1">
+                </a-mixin>
+
+                <!-- Text Question Panel Mix in -->
+                <a-mixin id="question-text"
+                    geometry="primitive: plane; width: 1.4; height: 0.18" 
+                    material="color: black; shader: flat;"
+                    text="width: 2; align: center; color: white"
+                    fade-in
+                    fade-out>
+                </a-mixin>
+
+                <!-- Text Panel Mixin -->
+                <a-mixin id="text-panel"
+                    geometry="primitive: plane; width: 1; height: 0.14" 
+                    material="color: black; shader: flat;"
+                    event-set__enter="_event: mouseenter; material.color: blue;"
+                    event-set__leave="_event: mouseleave; material.color: black;"
+                    text="width: 1.5; align: center; color: white"
+                    fade-in
+                    fade-out>
+                </a-mixin>
+            </a-assets>
+
+            <!-- A Frame Video Sphere -->
+            <a-videosphere src="#london_180" rotation="0 -90 0"
+                animation__fadein="startEvents: fadein; property: material.color; from: #000000; to: #ffffff; dur: 1000;"
+                animation__fadeout="startEvents: fadeout; property: material.color; from: #ffffff; to: #000000; dur: 1000;">
+            </a-videosphere>
+
+            <!-- A-Frame Camera -->
+            <a-entity position="0 0 0">
+                <a-camera>
+                    <a-entity mixin="camera-cursor"></a-entity>
+                </a-camera>
+            </a-entity>
+
+            <!-- A Frame Sky Video Timeout Listener -->
+            <a-entity id="skyvideo-timeout-listener"></a-entity>
+
+
+            <!-- /////////////////////////// Viewport ///////////////////////////-->
+
+            <!-- A Frame Question Panel -->
+            <a-entity id="qs-panel" position="0 1.8 -1.5">
+
+            </a-entity>
+
+            <!-- A Frame Options Panel -->
+            <a-entity position="0 1.4 -1.5" rotation="-5 0 0">
+                <!-- Start Course Button -->
+                <a-entity text="value: Start Course"
+                    click-start-course
+                    mixin="text-panel"
+                    id="start_course_btn"
+                    class="interactable">
+                </a-entity>
+
+                <a-entity id="ans-1">
+                </a-entity>
+            </a-entity>
+        </a-scene>
+    </body>
+
+
+    <!-- /////////////////////////// JS Behaviours ///////////////////////////-->
+    <script src="js/mobile-vr-lobby.js"></script>
+
+    <!-- Behaviour Scripts goes here -->
+    <script>
+        //General variables
+        var sceneEl = document.querySelector('a-scene'); //Main scene
+        var startCoursBtn = document.querySelector('#start_course_btn'); //Start course button
+
+        //When Start Course button clicked
+        startCoursBtn.addEventListener('click', function() 
+        {
+            skyVideoTimeOutRequest(sceneEl, 15, "Interaction1");
+        });
+        
+        //User defined behaviour goes below here
+        function Interaction1() 
+        {
+            pauseSkyVideo();
+
+            var question = initQuestion(sceneEl, "#qs-panel", "Where are you?");
+        
+            var options = 
+            [
+                {text: "Mount Everest", method: function(){
+                    setVideoSky("#beach_180", true);
+                }}, 
+                {text: "London Tower Bridge", method: function(){
+                    setVideoSky("#beach_180", true);
+                    addScore(50);
+                }}
+            ];
+
+            initOptions(sceneEl, "#ans-1", options, function()
+            { 
+                clearQuestion(question);
+                timeoutFunctionRequest(1000, function() 
+                {
+                    skyVideoTimeOutRequest(sceneEl, 10, "Interaction2")
+                });
+            });
+        }
+
+        function Interaction2() 
+        {
+            pauseSkyVideo();
+
+            var question = initQuestion(sceneEl, "#qs-panel", "Where are you again?");
+        
+            var options = 
+            [
+                {text: "Peble Beach", method: function()
+                {
+                    addScore(50);
+                }}, 
+                {text: "Bavarian Alps", method: null}
+            ];
+
+            initOptions(sceneEl, "#ans-1", options, function()
+            { 
+                clearQuestion(question);
+                finishCourse(function() { initQuestion(sceneEl, "#qs-panel", "Course Finished"); });
+            });
+        }
+    </script>
+<html>
