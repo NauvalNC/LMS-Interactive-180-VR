@@ -134,56 +134,84 @@
         //When Start Course button clicked
         startCoursBtn.addEventListener('click', function() 
         {
+            //Call function Interaction1 at fifteenth second of the video
             skyVideoTimeOutRequest(sceneEl, 15, "Interaction1");
         });
         
         //User defined behaviour goes below here
+        
+        //Interaction1 function block
         function Interaction1() 
         {
+            //Pause video
             pauseSkyVideo();
 
+            //Instantiate new text panel for question
             var question = initTextPanel(sceneEl, "#txt-panel", "Where are you?");
         
+            //Variables that holds array of properties for options that will be displayed
             var options = 
             [
                 {text: "Mount Everest", method: function(){
+                    //Set video sky to video with id #beach_180
                     setVideoSky("#beach_180", true);
                 }}, 
                 {text: "London Tower Bridge", method: function(){
+                    //Set video sky to video with id #beach_180
                     setVideoSky("#beach_180", true);
+
+                    //Add 50 to accumulated score to LMS
                     addScore(50);
                 }}
             ];
 
+            //Instantiate text panels for options
             initOptions(sceneEl, "#opt", options, function()
             { 
+                //Destroy question text panel
                 clearTextPanel(question);
+
+                //Call given function after 1 second
                 timeoutFunctionRequest(1000, function() 
                 {
+                    //Call function Interaction2 at tenth second of the video
                     skyVideoTimeOutRequest(sceneEl, 10, "Interaction2")
                 });
             });
         }
 
+        //Interaction2 function block
         function Interaction2() 
         {
+            //Pause video
             pauseSkyVideo();
 
+            //Instantiate new text panel for question
             var question = initTextPanel(sceneEl, "#txt-panel", "Where are you again?");
         
+            //Variables that holds array of properties for options that will be displayed
             var options = 
             [
                 {text: "Peble Beach", method: function()
                 {
+                    //Add 50 to accumulated score to LMS
                     addScore(50);
                 }}, 
                 {text: "Bavarian Alps", method: null}
             ];
 
+            //Instantiate text panels for options
             initOptions(sceneEl, "#opt", options, function()
             { 
+                //Destroy question text panel
                 clearTextPanel(question);
-                finishCourse(function() { initTextPanel(sceneEl, "#txt-panel", "Course Finished"); });
+
+                //Finish the course, and then call given function
+                finishCourse(function() 
+                { 
+                    //Instantiate new text panel to inform that the course is finished
+                    initTextPanel(sceneEl, "#txt-panel", "Course Finished"); 
+                });
             });
         }
     </script>
