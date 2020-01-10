@@ -41,22 +41,31 @@
                     position="0 0 -1">
                 </a-mixin>
 
-                <!-- Text Question Panel Mix in -->
-                <a-mixin id="question-text"
-                    geometry="primitive: plane; width: 1.4; height: 0.18" 
+                <!-- Text Description Text Panel Mixin -->
+                <a-mixin id="description-text-panel"
+                    geometry="primitive: plane; width: 1.85; height: 0.35;" 
                     material="color: black; shader: flat;"
-                    text="width: 2; align: center; color: white"
+                    text="width: 1.8; align: center; color: white;"
                     fade-in
                     fade-out>
                 </a-mixin>
 
-                <!-- Text Panel Mixin -->
-                <a-mixin id="text-panel"
-                    geometry="primitive: plane; width: 1; height: 0.14" 
+                <!-- Text Medium Text Panel Mixin -->
+                <a-mixin id="medium-text-panel"
+                    geometry="primitive: plane; width: 1.85; height: 0.25;" 
+                    material="color: black; shader: flat;"
+                    text="width: 1.8; align: center; color: white;"
+                    fade-in
+                    fade-out>
+                </a-mixin>
+
+                <!-- Option Panel Mixin -->
+                <a-mixin id="option-panel"
+                    geometry="primitive: plane; width: 1.3; height: 0.14" 
                     material="color: black; shader: flat;"
                     event-set__enter="_event: mouseenter; material.color: blue;"
                     event-set__leave="_event: mouseleave; material.color: black;"
-                    text="width: 1.5; align: center; color: white"
+                    text="width: 1.5; align: center; color: white;"
                     fade-in
                     fade-out>
                 </a-mixin>
@@ -81,22 +90,28 @@
 
             <!-- /////////////////////////// Viewport ///////////////////////////-->
 
-            <!-- A Frame Question Panel -->
-            <a-entity id="qs-panel" position="0 1.8 -1.5">
+            <!-- A Frame Description Panel -->
+            <a-entity id="des-panel" position="0 1.8 -1.5">
+            </a-entity>
 
+            <!-- A Frame Start Button Panel -->
+            <a-entity id="start-btn-panel" position="0 1.4 -1.5" rotation="-5 0 0">
+                <!-- Start Course Button -->
+                <a-entity text="value: Start Course"
+                    click-start-course
+                    mixin="option-panel"
+                    id="start-course-btn"
+                    class="interactable">
+                </a-entity>
+            </a-entity>
+
+            <!-- A Frame Text Panel -->
+            <a-entity id="txt-panel" position="0 1.8 -1.5">
             </a-entity>
 
             <!-- A Frame Options Panel -->
             <a-entity position="0 1.4 -1.5" rotation="-5 0 0">
-                <!-- Start Course Button -->
-                <a-entity text="value: Start Course"
-                    click-start-course
-                    mixin="text-panel"
-                    id="start_course_btn"
-                    class="interactable">
-                </a-entity>
-
-                <a-entity id="ans-1">
+                <a-entity id="opt">
                 </a-entity>
             </a-entity>
         </a-scene>
@@ -110,16 +125,20 @@
     <script>
         //General variables
         var sceneEl = document.querySelector('a-scene'); //Main scene
-        var startCoursBtn = document.querySelector('#start_course_btn'); //Start course button
+        var startCoursBtn = document.querySelector('#start-course-btn'); //Start course button
+
+        //Course Description
+        var des = initDescription("Course description goes here.");
 
         //When Start Course button clicked
         startCoursBtn.addEventListener('click', function() 
         {
-            //Do something
+            //Do something (user defined behaviour)
             //...
         });
         
         //User defined behaviour goes below here
+        //Do something
         //...
     </script>
 <html>

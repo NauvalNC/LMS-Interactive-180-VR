@@ -26,9 +26,37 @@ AFRAME.registerComponent('click-start-course',
     }
 });
 
+//Init Description
+function initDescription(description) 
+{
+    var scene = sceneEl;
+    
+    var qsPanel = scene.querySelector("#des-panel");
+
+    var el = document.createElement('a-entity');
+
+    el.setAttribute('text', 'value: ' + description);
+    el.setAttribute('mixin', 'description-text-panel');
+
+    qsPanel.appendChild(el);
+
+    return el;
+}
+
 //Start Course Function
 function startCourse() 
 {
+    //Destroy description text panel
+    try 
+    {
+        clearTextPanel(des); 
+    }
+    catch(err) 
+    {
+        console.error("Description text panel not found.");
+    }
+    
+
     playSkyVideo();
 
     try 
@@ -319,31 +347,31 @@ function timeoutFunctionRequest(timeout, func)
 
 ////////////// Text Panel Section - START //////////////
 
-//Create Question Panel
-//Parameters {scene, parent, question}
-function initQuestion(scene, parent, question) 
+//Create Text Panel
+//Parameters {scene, parent, text}
+function initTextPanel(scene, parent, text) 
 {
     var qsPanel = scene.querySelector(parent);
 
     var el = document.createElement('a-entity');
 
-    el.setAttribute('text', 'value: ' + question);
-    el.setAttribute('mixin', 'question-text');
+    el.setAttribute('text', 'value: ' + text);
+    el.setAttribute('mixin', 'medium-text-panel');
 
     qsPanel.appendChild(el);
 
     return el;
 }
 
-//Clear Question Panel
-//Parameters {question -> to be removed}
-function clearQuestion(question) 
+//Clear Text Panel
+//Parameters {panel -> to be removed}
+function clearTextPanel(panel) 
 {
-    question.emit('fadeout');
+    panel.emit('fadeout');
 
     setTimeout(function() 
     {
-        destroyElement(question);
+        destroyElement(panel);
     }, 200);
 }
 
@@ -364,7 +392,7 @@ function initOptions(scene, parent, options, callback)
         var el = document.createElement('a-entity');
         
         el.setAttribute('text', 'value: ' + options[i].text);
-        el.setAttribute('mixin', 'text-panel');
+        el.setAttribute('mixin', 'option-panel');
         el.setAttribute('class', 'interactable');
 
         if (options[i].method !== null) 

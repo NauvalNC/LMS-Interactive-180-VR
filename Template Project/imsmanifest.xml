@@ -12,6 +12,7 @@
 	</metadata>
 	<organizations default="B0">
 		<organization identifier="B0">
+			<!-- Course Informations -->
 			<title>Course Title Goes Here</title> 
 			<item identifier="i1" identifierref="r1" isvisible="true">
 				<title>Sub-Course Title Goes Here</title> 
