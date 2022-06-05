@@ -1,4 +1,4 @@
-# lms_interactive_180_video_vr
+# LMS Interactive 180-VR
 Resource for LMS VR Interactive 180 Video development using A-Frame and SCORM.
 Resource including:
 Template Project,
